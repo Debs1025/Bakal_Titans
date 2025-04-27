@@ -9,6 +9,7 @@ contains the email, password, or log in as chrome / facebook*/
 import 'package:flutter/material.dart';
 import 'signup.dart';
 import '../dashboard/homescreen.dart';
+import 'password/forgotpass.dart'; 
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -176,9 +177,14 @@ class _LoginScreenState extends State<LoginScreen> {
                               ],
                             ),
                             // Forgot Password
-                            GestureDetector(
+                             GestureDetector(
                               onTap: () {
-                                // Handle forgot password
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const ResetPasswordScreen(),
+                                  ),
+                                );
                               },
                               child: Text(
                                 'Forgot Password?',

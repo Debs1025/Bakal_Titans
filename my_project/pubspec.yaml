@@ -76,6 +76,11 @@ flutter:
     - assets/pic4.png
     - assets/suggestion.jpg
 
+    #Password User
+    - assets/Password/complete.png
+    - assets/Password/Icon.png
+    - assets/Password/Backarrow.png
+
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 

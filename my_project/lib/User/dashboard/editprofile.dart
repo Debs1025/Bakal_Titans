@@ -40,7 +40,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     print("Email: ${_emailController.text}");
     print("Bio: ${_bioController.text}");
 
-    Navigator.pop(context); // Close the page after saving
+    Navigator.pop(context); 
   }
 
   @override
