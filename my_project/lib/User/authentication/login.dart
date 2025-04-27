@@ -7,7 +7,7 @@ contains the email, password, or log in as chrome / facebook*/
 
 
 import 'package:flutter/material.dart';
-import 'signup.dart';
+import 'SetProfile.dart';
 import '../dashboard/homescreen.dart';
 import 'password/forgotpass.dart'; 
 
@@ -304,7 +304,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const SignUpScreen(),
+                                  builder: (context) => const SetProfileScreen(), 
                                 ),
                               );
                             },

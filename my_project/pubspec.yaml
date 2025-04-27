@@ -30,9 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
 
 dev_dependencies:
@@ -80,6 +77,23 @@ flutter:
     - assets/Password/complete.png
     - assets/Password/Icon.png
     - assets/Password/Backarrow.png
+
+    #Sign Up User
+    - assets/Profile/arrow.png  
+    - assets/Profile/backarrow.png
+    - assets/Profile/birthdate.png
+    - assets/Profile/gender.png
+    - assets/Profile/height.png
+    - assets/Profile/icon.png
+    - assets/Profile/page1.png
+    - assets/Profile/weight.png 
+    - assets/Profile/activity.png
+    - assets/Profile/page2.png
+    - assets/Profile/body.png
+    - assets/Profile/ectomorph.png
+    - assets/Profile/mesomorph.png
+    - assets/Profile/endomorph.png
+    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
