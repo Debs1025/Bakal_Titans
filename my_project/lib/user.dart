@@ -6,8 +6,8 @@ Description: This is where a user is prompt which user he/she is whether a user 
 
 
 import 'package:flutter/material.dart';
-import '../../splash/segui.dart';
-import 'login.dart';
+import 'splash/segui.dart';
+import 'User/authentication/login.dart';
 
 class UserScreen extends StatelessWidget {  
   const UserScreen({super.key});

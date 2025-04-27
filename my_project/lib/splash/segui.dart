@@ -6,7 +6,7 @@ Description: This is where the 5th splash screen is coded*/
 
 
 import 'package:flutter/material.dart';
-import '../User/authentication/user.dart';
+import '../user.dart';
 
 class SeguiScreen extends StatelessWidget {
   const SeguiScreen({super.key});
