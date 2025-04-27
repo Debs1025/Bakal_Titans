@@ -93,6 +93,11 @@ flutter:
     - assets/Profile/ectomorph.png
     - assets/Profile/mesomorph.png
     - assets/Profile/endomorph.png
+    - assets/Profile/bmi.png
+    - assets/Profile/scale.png
+    - assets/Profile/page4.png
+    - assets/Profile/page5.png
+
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

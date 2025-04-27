@@ -6,7 +6,7 @@ Description: This is where the 5th splash screen is coded*/
 
 
 import 'package:flutter/material.dart';
-import '../user.dart';
+import '../User/authentication/login.dart';
 
 class SeguiScreen extends StatelessWidget {
   const SeguiScreen({super.key});
@@ -147,7 +147,7 @@ class SeguiScreen extends StatelessWidget {
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
-                      MaterialPageRoute(builder: (context) => const UserScreen()),
+                      MaterialPageRoute(builder: (context) => const LoginScreen()),
                     );
                   },
                   style: ElevatedButton.styleFrom(

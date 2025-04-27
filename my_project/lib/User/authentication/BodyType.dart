@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'WeightGoal.dart';
 
 class BodyTypeScreen extends StatefulWidget {
   const BodyTypeScreen({super.key});
@@ -200,39 +201,44 @@ class _BodyTypeScreenState extends State<BodyTypeScreen> {
     );
   }
 
-  Widget _buildContinueButton() {
-    return ElevatedButton(
-      onPressed: selectedBodyType != null ? () {
-        // Navigate to next screen
-      } : null,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFFFF8000),
-        foregroundColor: Colors.white,
-        minimumSize: const Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
+Widget _buildContinueButton() {
+  return ElevatedButton(
+    onPressed: selectedBodyType != null ? () {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const WeightGoalScreen(),
         ),
-        elevation: 0,
+      );
+    } : null,
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFFFF8000),
+      foregroundColor: Colors.white,
+      minimumSize: const Size(double.infinity, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(25),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Continue',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+      elevation: 0,
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          'Continue',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
           ),
-          const SizedBox(width: 8),
-          Image.asset(
-            'assets/Profile/arrow.png',  
-            width: 16,
-            height: 16,
-            color: Colors.white,
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+        const SizedBox(width: 8),
+        Image.asset(
+          'assets/Profile/arrow.png',
+          width: 16,
+          height: 16,
+          color: Colors.white,
+        ),
+      ],
+    ),
+  );
+ }
 }
