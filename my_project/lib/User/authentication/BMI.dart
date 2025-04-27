@@ -1,4 +1,12 @@
+/* Authored by: Erick De Belen
+Company: Gerard Fitness Inc.
+Project: Bakal Titans
+Feature: [BKT-0017] BMI Screen
+Description: A screen where it shows the user's bmi base on their details in the previous sign up screens */
+
+
 import 'package:flutter/material.dart';
+import 'signupComplete.dart';
 
 class BMIScreen extends StatefulWidget {
   const BMIScreen({super.key});
@@ -8,8 +16,8 @@ class BMIScreen extends StatefulWidget {
 }
 
 class _BMIScreenState extends State<BMIScreen> {
-  double bmi = 25.9; // Example BMI value
-  String bmiCategory = 'Overweight';
+  double bmi = 25.9; //Hardcoded BMI for demo
+  String bmiCategory = 'Overweight'; //Hardcoded BMI category for demo
 
   @override
   Widget build(BuildContext context) {
@@ -169,38 +177,44 @@ class _BMIScreenState extends State<BMIScreen> {
   }
 
   Widget _buildContinueButton() {
-    return ElevatedButton(
-      onPressed: () {
-        // Navigate to next screen
-      },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFFFF8000),
-        foregroundColor: Colors.white,
-        minimumSize: const Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
+  return ElevatedButton(
+    onPressed: () {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const PassCompleteScreen(),
         ),
-        elevation: 0,
+        (route) => false,
+      );
+    },
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFFFF8000),
+      foregroundColor: Colors.white,
+      minimumSize: const Size(double.infinity, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(25),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text(
-            'Continue',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+      elevation: 0,
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Text(
+          'Continue',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
           ),
-          const SizedBox(width: 8),
-          Image.asset(
-            'assets/Profile/arrow.png',
-            width: 16,
-            height: 16,
-            color: Colors.white,
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+        const SizedBox(width: 8),
+        Image.asset(
+          'assets/Profile/arrow.png',
+          width: 16,
+          height: 16,
+          color: Colors.white,
+        ),
+      ],
+    ),
+  );
+ }
 }

@@ -1,3 +1,9 @@
+/* Authored by: Erick De Belen
+Company: Gerard Fitness Inc.
+Project: Bakal Titans
+Feature: [BKT-0017] Activity Level Screen
+Description: A screen where user choose what type of activity level they have */
+
 import 'package:flutter/material.dart';
 import 'BodyType.dart';
 
@@ -40,7 +46,7 @@ class _ActivityLevelScreenState extends State<ActivityLevelScreen> {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 120),
                   _buildActivityLevels(),
                 ],
               ),

@@ -1,3 +1,10 @@
+/* Authored by: Erick De Belen
+Company: Gerard Fitness Inc.
+Project: Bakal Titans
+Feature: [BKT-0017] Body Type Screen
+Description: A screen where users can choose what type of body they have */
+
+
 import 'package:flutter/material.dart';
 import 'WeightGoal.dart';
 

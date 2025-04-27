@@ -1,3 +1,10 @@
+/* Authored by: Erick De Belen
+Company: Gerard Fitness Inc.
+Project: Bakal Titans
+Feature: [BKT-0020] Verification Screen
+Description: A screen where users enter their verification code that they receive from their gmail */
+
+
 import 'package:flutter/material.dart';
 import '../login.dart';
 import 'enterpass.dart';

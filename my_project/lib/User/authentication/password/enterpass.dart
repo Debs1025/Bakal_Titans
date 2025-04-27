@@ -1,3 +1,10 @@
+/* Authored by: Erick De Belen
+Company: Gerard Fitness Inc.
+Project: Bakal Titans
+Feature: [BKT-0020] Enter Password Screen
+Description: This is where the user enters their new password*/
+
+
 import 'package:flutter/material.dart';
 import '../login.dart';
 import 'passComplete.dart';

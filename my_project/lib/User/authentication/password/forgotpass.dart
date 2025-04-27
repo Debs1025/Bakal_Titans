@@ -1,3 +1,10 @@
+/* Authored by: Erick De Belen
+Company: Gerard Fitness Inc.
+Project: Bakal Titans
+Feature: [BKT-0020] Forgot Password Screen
+Description: This is where the user enter their gmail to get the code */
+
+
 import 'package:flutter/material.dart';
 import 'verification.dart';
 

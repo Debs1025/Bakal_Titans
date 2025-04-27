@@ -149,21 +149,23 @@ class DebelenScreen extends StatelessWidget {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent,
-                    minimumSize: const Size(double.infinity, 50),
+                    backgroundColor: const Color.fromARGB(255, 20, 8, 1),
+                    foregroundColor: const Color(0xFFF97000),
+                    minimumSize: const Size(double.infinity, 65), 
+                    padding: const EdgeInsets.symmetric(vertical: 20), 
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+                      borderRadius: BorderRadius.circular(32), 
                       side: const BorderSide(
                         color: Color(0xFFF97000),
-                        width: 2,
+                        width: 2.0,
                       ),
                     ),
+                    elevation: 0,
                   ),
                   child: const Text(
                     "Next",
                     style: TextStyle(
-                      color: Color(0xFFF97000),
-                      fontSize: 16,
+                      fontSize: 18, 
                       fontWeight: FontWeight.bold,
                     ),
                   ),

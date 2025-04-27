@@ -1,3 +1,10 @@
+/* Authored by: Erick De Belen
+Company: Gerard Fitness Inc.
+Project: Bakal Titans
+Feature: [BKT-0017] Set Profile Screen
+Description: A screen where user fill up their birthdate, gender, weight and height */
+
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'ActivityLevel.dart';
@@ -116,38 +123,44 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
 
   // Profile Fields Section
   Widget _buildProfileFields() {
-    return Column(
-      children: [
-        _buildProfileField(
-          icon: 'assets/Profile/birthdate.png',
-          text: 'Enter birthdate',
-          selectedValue: selectedBirthdate,
-          onTap: _showBirthdateDialog,
-        ),
-        const SizedBox(height: 16),
-        _buildProfileField(
-          icon: 'assets/Profile/gender.png',
-          text: 'Enter gender',
-          selectedValue: selectedGender,
-          onTap: _showGenderDialog,
-        ),
-        const SizedBox(height: 16),
-        _buildProfileField(
-          icon: 'assets/Profile/weight.png',
-          text: 'Enter weight',
-          selectedValue: selectedWeight,
-          onTap: _showWeightDialog,
-        ),
-        const SizedBox(height: 16),
-        _buildProfileField(
-          icon: 'assets/Profile/height.png',
-          text: 'Enter height',
-          selectedValue: selectedHeight,
-          onTap: _showHeightDialog,
-        ),
-      ],
-    );
-  }
+  return Center( 
+    child: Container(
+      constraints: const BoxConstraints(maxWidth: 340), 
+      child: Column(
+        children: [
+          const SizedBox(height: 20),  
+          _buildProfileField(
+            icon: 'assets/Profile/birthdate.png',
+            text: 'Enter birthdate',
+            selectedValue: selectedBirthdate,
+            onTap: _showBirthdateDialog,
+          ),
+          const SizedBox(height: 16),
+          _buildProfileField(
+            icon: 'assets/Profile/gender.png',
+            text: 'Enter gender',
+            selectedValue: selectedGender,
+            onTap: _showGenderDialog,
+          ),
+          const SizedBox(height: 16),
+          _buildProfileField(
+            icon: 'assets/Profile/weight.png',
+            text: 'Enter weight',
+            selectedValue: selectedWeight,
+            onTap: _showWeightDialog,
+          ),
+          const SizedBox(height: 16),
+          _buildProfileField(
+            icon: 'assets/Profile/height.png',
+            text: 'Enter height',
+            selectedValue: selectedHeight,
+            onTap: _showHeightDialog,
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
   Widget _buildProfileField({
     required String icon,

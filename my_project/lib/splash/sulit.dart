@@ -6,7 +6,7 @@ Description: This is where the 4th splash screen is coded*/
 
 
 import 'package:flutter/material.dart';
-import 'segui.dart';
+import './segui.dart'; 
 
 class SulitScreen extends StatelessWidget {
   const SulitScreen({super.key});
@@ -140,18 +140,19 @@ class SulitScreen extends StatelessWidget {
               
               const SizedBox(height: 30),
               
-              // Next Button 
+              // Next Button
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 30),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const SeguiScreen()),
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const SeguiScreen(),
+                      ),
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color.fromARGB(255, 20, 8, 1),
+                    backgroundColor: Colors.black, 
                     foregroundColor: const Color(0xFFFF8000),
                     minimumSize: const Size(double.infinity, 65),
                     padding: const EdgeInsets.symmetric(vertical: 20),

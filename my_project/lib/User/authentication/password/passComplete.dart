@@ -1,3 +1,10 @@
+/* Authored by: Erick De Belen
+Company: Gerard Fitness Inc.
+Project: Bakal Titans
+Feature: [BKT-0020] Password Complete Screen
+Description: A interruption screen where it tells the user that the password has been changed */
+
+
 import 'package:flutter/material.dart';
 import '../login.dart';
 

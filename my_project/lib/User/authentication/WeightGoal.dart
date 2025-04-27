@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'BMI.dart';
 
 class WeightGoalScreen extends StatefulWidget {
@@ -10,6 +11,27 @@ class WeightGoalScreen extends StatefulWidget {
 
 class _WeightGoalScreenState extends State<WeightGoalScreen> {
   final TextEditingController weightController = TextEditingController();
+  bool isWeightValid = false;
+
+  @override
+  void initState() {
+    super.initState();
+    weightController.addListener(_validateWeight);
+  }
+
+  void _validateWeight() {
+    setState(() {
+      final weight = double.tryParse(weightController.text);
+      isWeightValid = weight != null && weight > 0;
+    });
+  }
+
+  @override
+  void dispose() {
+    weightController.removeListener(_validateWeight);
+    weightController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,29 +39,31 @@ class _WeightGoalScreenState extends State<WeightGoalScreen> {
       backgroundColor: Colors.black,
       body: SafeArea(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Select Weight Goal',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+            Expanded(
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Select Weight Goal',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 32),
-                  _buildWeightGoalInput(),
-                ],
+                    const SizedBox(height: 80),
+                    _buildWeightGoalInput(),
+                    const Spacer(),
+                    _buildBottomSection(),
+                  ],
+                ),
               ),
             ),
-            const Spacer(),
-            _buildBottomSection(),
           ],
         ),
       ),
@@ -90,71 +114,85 @@ class _WeightGoalScreenState extends State<WeightGoalScreen> {
   }
 
   Widget _buildWeightGoalInput() {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(24),
-      decoration: BoxDecoration(
-        color: Colors.grey[900],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(
-            'assets/Profile/scale.png',
-            width: 48,
-            height: 48,
-            color: const Color(0xFFFF8000),
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Your Weight Goal',
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 18,
-              fontWeight: FontWeight.w500,
+    return Center(
+      child: Container(
+        width: 280,
+        padding: const EdgeInsets.all(32),
+        margin: const EdgeInsets.symmetric(horizontal: 24),
+        decoration: BoxDecoration(
+          color: Colors.grey[900],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Image.asset(
+                'assets/Profile/scale.png',
+                width: 48,
+                height: 48,
+                color: const Color(0xFFFF8000),
+              ),
             ),
-          ),
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(25),
+            const SizedBox(height: 24),
+            const Text(
+              'Your Weight Goal',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(
-                  width: 80,
-                  child: TextField(
-                    controller: weightController,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                    ),
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: '180.0',
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
+            const SizedBox(height: 24),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 80,
+                      child: TextField(
+                        controller: weightController,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                        textAlign: TextAlign.center,
+                        keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*')),
+                        ],
+                        decoration: const InputDecoration(
+                          border: InputBorder.none,
+                          hintText: '180.0',
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        onChanged: (_) => _validateWeight(),
                       ),
                     ),
-                  ),
+                    const Text(
+                      'lbs',
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ],
                 ),
-                const Text(
-                  'lbs',
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 18,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -191,50 +229,44 @@ class _WeightGoalScreenState extends State<WeightGoalScreen> {
     );
   }
 
-Widget _buildContinueButton() {
-  return ElevatedButton(
-    onPressed: weightController.text.isNotEmpty ? () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const BMIScreen(),
-        ),
-      );
-    } : null,
-    style: ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xFFFF8000),
-      foregroundColor: Colors.white,
-      minimumSize: const Size(double.infinity, 50),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(25),
-      ),
-      elevation: 0,
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          'Continue',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+  Widget _buildContinueButton() {
+    return ElevatedButton(
+      onPressed: isWeightValid ? () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const BMIScreen(),
           ),
+        );
+      } : null,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: isWeightValid ? const Color(0xFFFF8000) : Colors.grey[800],
+        foregroundColor: Colors.white,
+        minimumSize: const Size(double.infinity, 50),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(25),
         ),
-        const SizedBox(width: 8),
-        Image.asset(
-          'assets/Profile/arrow.png',
-          width: 16,
-          height: 16,
-          color: Colors.white,
-        ),
-      ],
-    ),
-  );
-}
-
-  @override
-  void dispose() {
-    weightController.dispose();
-    super.dispose();
+        elevation: 0,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const Text(
+            'Continue',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Image.asset(
+            'assets/Profile/arrow.png',
+            width: 16,
+            height: 16,
+            color: Colors.white,
+          ),
+        ],
+      ),
+    );
   }
 }
