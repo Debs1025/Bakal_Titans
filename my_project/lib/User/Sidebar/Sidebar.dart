@@ -52,7 +52,6 @@ class Sidebar extends StatelessWidget {
           _buildProfileTile(),
           _buildMenuItem(context, Icons.local_activity, 'Activity', onActivityTap),
           _buildMenuItem(context, Icons.favorite_border, 'Favorites', onFavoritesTap),
-          _buildMenuItem(context, Icons.settings, 'Settings', onSettingsTap),
           _buildMenuItem(context, Icons.description_outlined, 'Terms and Policies', onSettingsTap),
           _buildMenuItem(context, Icons.notifications_outlined, 'Notifications', onNotificationTap),
           const Spacer(),
