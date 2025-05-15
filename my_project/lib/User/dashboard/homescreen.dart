@@ -15,6 +15,7 @@ import '../Sidebar/Sidebar.dart';
 import '../Workout/Program.dart';
 import 'Extras/Notification.dart';
 import 'Program/AddProgram.dart';
+import 'Extras/Favorites.dart';
 
 /// Mainscreen
 class HomeScreen extends StatefulWidget {
@@ -130,7 +131,15 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     ),
     actions: [
-      const Icon(Icons.bookmark_outline, color: Colors.white),
+      GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => FavoritesPage()),
+          );
+        },
+        child: const Icon(Icons.favorite_border, color: Color(0xFFF97000)),
+      ),
       const SizedBox(width: 20),
       GestureDetector(
         onTap: () {

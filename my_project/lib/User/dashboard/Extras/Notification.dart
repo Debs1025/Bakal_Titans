@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
 import '../homescreen.dart';
 
-class NotificationPage extends StatelessWidget {
-  // Sample notification data - in a real app this would come from a database
-  final List<Map<String, dynamic>> notifications = [
+class NotificationPage extends StatefulWidget {
+  const NotificationPage({Key? key}) : super(key: key);
+
+  @override
+  State<NotificationPage> createState() => _NotificationPageState();
+}
+
+class _NotificationPageState extends State<NotificationPage> {
+  final List<Map<String, dynamic>> _notifications = [
     {
       "title": "New Workout Available",
       "message": "Check out the new FST-7 Back Workout program",
@@ -27,7 +33,19 @@ class NotificationPage extends StatelessWidget {
     }
   ];
 
-  NotificationPage({Key? key}) : super(key: key);
+  void _markAsRead(int index) {
+    setState(() {
+      _notifications[index]['isRead'] = true;
+    });
+  }
+
+  void _markAllAsRead() {
+    setState(() {
+      for (var notification in _notifications) {
+        notification['isRead'] = true;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +76,7 @@ class NotificationPage extends StatelessWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () {
-              // Add mark all as read functionality
-            },
+            onPressed: _markAllAsRead,
             child: Text(
               'Mark all as read',
               style: TextStyle(
@@ -73,55 +89,66 @@ class NotificationPage extends StatelessWidget {
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: notifications.length,
+        itemCount: _notifications.length,
         itemBuilder: (context, index) {
-          final notification = notifications[index];
-          return Container(
-            margin: const EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1C1C1E),
-              borderRadius: BorderRadius.circular(16),
-              border: notification["isRead"] as bool
-                  ? null
-                  : Border.all(color: const Color(0xFFF97000), width: 1),
-            ),
-            child: ListTile(
-              contentPadding: const EdgeInsets.all(16),
-              leading: CircleAvatar(
-                backgroundColor: const Color(0xFFF97000).withOpacity(0.1),
-                child: Icon(
-                  _getNotificationIcon(notification["type"] as String),
-                  color: const Color(0xFFF97000),
-                ),
+          final notification = _notifications[index];
+          return GestureDetector(
+            onTap: () => _markAsRead(index),
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1C1C1E),
+                borderRadius: BorderRadius.circular(16),
+                border: notification["isRead"] as bool
+                    ? null
+                    : Border.all(color: const Color(0xFFF97000), width: 1),
               ),
-              title: Text(
-                notification["title"]!,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: const Color(0xFFF97000).withOpacity(0.1),
+                      child: Icon(
+                        _getNotificationIcon(notification["type"] as String),
+                        color: const Color(0xFFF97000),
+                      ),
+                    ),
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            notification["title"]!,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            notification["message"]!,
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            notification["time"]!,
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-              subtitle: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(height: 8),
-                  Text(
-                    notification["message"]!,
-                    style: TextStyle(
-                      color: Colors.grey[400],
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    notification["time"]!,
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
-                    ),
-                  ),
-                ],
               ),
             ),
           );

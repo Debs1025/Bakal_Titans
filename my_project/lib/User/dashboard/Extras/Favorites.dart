@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../homescreen.dart';
+import '../../Workout/Program.dart';
 
 class FavoritesPage extends StatelessWidget {
-  // Sample favorites data - in a real app this would come from a database
   final List<Map<String, dynamic>> favorites = [
     {
       "title": "FST-7 Back Workout",
@@ -62,73 +62,102 @@ class FavoritesPage extends StatelessWidget {
         itemCount: favorites.length,
         itemBuilder: (context, index) {
           final favorite = favorites[index];
-          return Container(
-            margin: const EdgeInsets.only(bottom: 16),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1C1C1E),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Row(
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: Radius.circular(16),
-                    bottomLeft: Radius.circular(16),
-                  ),
-                  child: Image.asset(
-                    favorite["image"]!,
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.cover,
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => ProgramDetail(
+                    title: favorite["title"]!,
+                    duration: favorite["duration"]!.replaceAll(' mins', ''),
+                    description: favorite["type"]!,
+                    imagePath: favorite["image"]!,
                   ),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        favorite["title"]!,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        favorite["type"]!,
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        "By ${favorite["trainer"]!}",
-                        style: TextStyle(
-                          color: Colors.grey[400],
-                          fontSize: 12,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      _buildProgramDetail(
-                        Icons.timer,
-                        favorite["duration"]!,
-                      ),
-                    ],
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1C1C1E),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Workout Image
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(16),
+                      bottomLeft: Radius.circular(16),
+                    ),
+                    child: Image.asset(
+                      favorite["image"]!,
+                      width: 100,
+                      height: 100,
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(
-                    Icons.favorite,
-                    color: Color(0xFFF97000),
+                  const SizedBox(width: 16),
+                  // Workout Details
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            favorite["title"]!,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            favorite["type"]!,
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 14,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            "By ${favorite["trainer"]!}",
+                            style: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 12,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          _buildProgramDetail(
+                            Icons.timer,
+                            favorite["duration"]!,
+                          ),
+                        ],
+                      ),
+                    ),
                   ),
-                  onPressed: () {
-                    // Add unfavorite functionality here
-                  },
-                ),
-              ],
+                  // Favorite Button
+                  IconButton(
+                    icon: const Icon(
+                      Icons.favorite,
+                      color: Color(0xFFF97000),
+                    ),
+                    onPressed: () {
+                      // TODO: Add unfavorite functionality
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Removed from favorites'),
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
             ),
           );
         },

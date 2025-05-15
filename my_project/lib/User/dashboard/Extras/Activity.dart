@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import '../homescreen.dart';
 
 class ActivityPage extends StatelessWidget {
-  // Sample activity data - in a real app this would come from a database
   final List<Map<String, dynamic>> activities = [
     {
       "title": "FST-7 Back Workout",
@@ -124,36 +123,43 @@ class ActivityPage extends StatelessWidget {
     );
   }
 
-  Widget _buildActivityList() {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      itemCount: activities.length,
-      itemBuilder: (context, index) {
-        final activity = activities[index];
-        return Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          decoration: BoxDecoration(
-            color: const Color(0xFF1C1C1E),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(16),
-                  bottomLeft: Radius.circular(16),
-                ),
+Widget _buildActivityList() {
+  return ListView.builder(
+    padding: const EdgeInsets.symmetric(horizontal: 16),
+    itemCount: activities.length,
+    itemBuilder: (context, index) {
+      final activity = activities[index];
+      return Container(
+        margin: const EdgeInsets.only(bottom: 16),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1C1C1E),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Activity Image
+            ClipRRect(
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                bottomLeft: Radius.circular(16),
+              ),
+              child: SizedBox(
+                width: 80, // Reduced from 100
+                height: 80, // Reduced from 100
                 child: Image.asset(
                   activity["image"]!,
-                  width: 100,
-                  height: 100,
                   fit: BoxFit.cover,
                 ),
               ),
-              const SizedBox(width: 16),
-              Expanded(
+            ),
+            // Activity Details
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
                       activity["title"]!,
@@ -162,6 +168,8 @@ class ActivityPage extends StatelessWidget {
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                       ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -172,52 +180,51 @@ class ActivityPage extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        _buildActivityDetail(
-                          Icons.timer,
-                          activity["duration"]!,
-                        ),
-                        const SizedBox(width: 16),
-                        _buildActivityDetail(
-                          Icons.local_fire_department,
-                          "${activity["calories"]} kcal",
-                        ),
-                      ],
+                    // Activity Stats
+                    DefaultTextStyle(
+                      style: TextStyle(
+                        color: Colors.grey[400],
+                        fontSize: 12,
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.timer,
+                            color: const Color(0xFFF97000),
+                            size: 14,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(activity["duration"]!),
+                          const SizedBox(width: 12),
+                          Icon(
+                            Icons.local_fire_department,
+                            color: const Color(0xFFF97000),
+                            size: 14,
+                          ),
+                          const SizedBox(width: 4),
+                          Text("${activity["calories"]} kcal"),
+                        ],
+                      ),
                     ),
                   ],
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.all(16),
-                child: Text(
-                  activity["date"]!,
-                  style: TextStyle(
-                    color: Colors.grey[400],
-                    fontSize: 12,
-                  ),
+            ),
+            // Date
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Text(
+                activity["date"]!,
+                style: TextStyle(
+                  color: Colors.grey[400],
+                  fontSize: 12,
                 ),
               ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildActivityDetail(IconData icon, String text) {
-    return Row(
-      children: [
-        Icon(icon, color: const Color(0xFFF97000), size: 16),
-        const SizedBox(width: 4),
-        Text(
-          text,
-          style: TextStyle(
-            color: Colors.grey[400],
-            fontSize: 12,
-          ),
+            ),
+          ],
         ),
-      ],
-    );
-  }
+      );
+    },
+  );
+ }
 }

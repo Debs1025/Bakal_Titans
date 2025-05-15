@@ -4,6 +4,8 @@ import '../dashboard/Extras/Activity.dart';
 import '../dashboard/Extras/Favorites.dart';
 import '../dashboard/Extras/Notification.dart';
 import '../dashboard/Extras/Terms.dart';
+import '../dashboard/Profile/profile.dart';
+
 
 class Sidebar extends StatelessWidget {
   final Function()? onProfileTap;
@@ -49,7 +51,7 @@ class Sidebar extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          _buildProfileTile(),
+          _buildProfileTile(context),
           _buildMenuItem(context, Icons.local_activity, 'Activity', onActivityTap),
           _buildMenuItem(context, Icons.favorite_border, 'Favorites', onFavoritesTap),
           _buildMenuItem(context, Icons.description_outlined, 'Terms and Policies', onSettingsTap),
@@ -62,16 +64,22 @@ class Sidebar extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileTile() {
-    return const ListTile(
-      leading: CircleAvatar(
+  Widget _buildProfileTile(BuildContext context) {
+    return ListTile(
+      leading: const CircleAvatar(
         backgroundColor: Color(0xFFF97000),
         child: Icon(Icons.person, color: Colors.white),
       ),
-      title: Text(
+      title: const Text(
         'Profile',
         style: TextStyle(color: Colors.white),
       ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ProfilePage()),
+        );
+      },
     );
   }
 
