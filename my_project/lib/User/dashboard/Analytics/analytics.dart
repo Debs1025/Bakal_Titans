@@ -80,76 +80,55 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                     ),
                   ),
                 ),
+                actions: [
+                  Stack(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => NotificationPage()),
+                          );
+                        },
+                        child: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 16.0),
+                          child: Icon(
+                            Icons.notifications_none,
+                            color: Color(0xFFF97000),
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        right: 16,
+                        top: 2,
+                        child: Container(
+                          height: 14,
+                          width: 14,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFF97000),
+                            shape: BoxShape.circle,
+                          ),
+                          child: const Center(
+                            child: Text(
+                              '3',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 10,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
               body: Column(
                 children: [
-                  // Top User Analytics Header
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            const Icon(Icons.account_circle, color: Colors.white, size: 32),
-                            const SizedBox(width: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: const [
-                                Text('Analytics of', 
-                                    style: TextStyle(color: Colors.white70, fontSize: 12)),
-                                SizedBox(height: 2),
-                                Text('Erick Nathaniel S. De...', 
-                                    style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                          ],
-                        ),
-                        Stack(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(builder: (context) => NotificationPage()),
-                                );
-                              },
-                              child: const Icon(
-                                Icons.notifications_none, 
-                                color: Colors.white, 
-                                size: 30
-                              ),
-                            ),
-                            Positioned(
-                              right: 0,
-                              top: 0,
-                              child: Container(
-                                height: 14,
-                                width: 14,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xFFF97000),  // Using your theme's orange color
-                                  shape: BoxShape.circle,
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    '3', 
-                                    style: TextStyle(
-                                      color: Colors.white, 
-                                      fontSize: 10
-                                    )
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-
                   // Toggle Buttons
                   Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     child: Center(
                       child: Container(
                         decoration: BoxDecoration(
@@ -303,19 +282,19 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
               width: 20,
               margin: const EdgeInsets.only(bottom: 4),
               decoration: BoxDecoration(
-                color: Colors.orange,
+                color: const Color(0xFFF97000),
                 borderRadius: BorderRadius.circular(1),
               ),
             ),
           Icon(
             icon,
-            color: isSelected ? Colors.orange : Colors.grey,
+            color: isSelected ? const Color(0xFFF97000) : Colors.grey,
           ),
           const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(
-              color: isSelected ? Colors.orange : Colors.grey,
+              color: isSelected ? const Color(0xFFF97000) : Colors.grey,
               fontSize: 10,
             ),
           ),

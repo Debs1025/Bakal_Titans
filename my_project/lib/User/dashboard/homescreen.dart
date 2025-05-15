@@ -331,8 +331,7 @@ Widget _buildWorkoutItem(String title, String subtitle, String duration, String 
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 16.0),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+            children: [ 
               _buildNutritionBox("102g", "Protein left", Icons.water_drop_outlined),
               _buildNutritionBox("250g", "Carbs left", Icons.spa_outlined),
               _buildNutritionBox("52g", "Fats left", Icons.settings),
@@ -400,9 +399,10 @@ Widget _buildWorkoutItem(String title, String subtitle, String duration, String 
     );
   }
 
-  Widget _buildNutritionBox(String value, String label, IconData icon) {
-    return Container(
-      width: 120,
+ Widget _buildNutritionBox(String value, String label, IconData icon) {
+  return Expanded(  // Wrap with Expanded
+    child: Container(
+      margin: const EdgeInsets.symmetric(horizontal: 4), // Add margin
       height: 125,
       decoration: BoxDecoration(
         color: const Color(0xFF666666),
@@ -441,22 +441,23 @@ Widget _buildWorkoutItem(String title, String subtitle, String duration, String 
             flex: 1,
             child: Center(
               child: Container(
-                width: 56,
-                height: 56,
+                width: 48,
+                height: 48,
                 decoration: const BoxDecoration(
                   color: Colors.black,
                   shape: BoxShape.circle,
                 ),
                 child: Center(
-                  child: Icon(icon, color: Colors.white, size: 28),
+                  child: Icon(icon, color: Colors.white, size: 24),
                 ),
               ),
             ),
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildSuggestions() {
     return Column(
