@@ -14,6 +14,7 @@ import 'Profile/profile.dart';
 import '../Sidebar/Sidebar.dart';
 import '../Workout/Program.dart';
 import 'Extras/Notification.dart';
+import 'Program/AddProgram.dart';
 
 /// Mainscreen
 class HomeScreen extends StatefulWidget {
@@ -565,15 +566,20 @@ Widget _buildWorkoutItem(String title, String subtitle, String duration, String 
   }
 
   Widget _buildFloatingActionButton() {
-    return Positioned(
-      right: 16,
-      bottom: 84,
-      child: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: const Color(0xFFF97000),
-        shape: const CircleBorder(),
-        child: const Icon(Icons.add, color: Colors.white, size: 24),
-      ),
-    );
-  }
+  return Positioned(
+    right: 16,
+    bottom: 84,
+    child: FloatingActionButton(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const AddProgramScreen()),
+        );
+      },
+      backgroundColor: const Color(0xFFF97000),
+      shape: const CircleBorder(),
+      child: const Icon(Icons.add, color: Colors.white, size: 24),
+    ),
+  );
+ }
 }
