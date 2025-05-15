@@ -13,6 +13,7 @@ import 'Analytics/analytics.dart';
 import 'Profile/profile.dart'; 
 import '../Sidebar/Sidebar.dart';
 import '../Workout/Program.dart';
+import 'Extras/Notification.dart';
 
 /// Mainscreen
 class HomeScreen extends StatefulWidget {
@@ -121,17 +122,25 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Color(0xFF333333),
           child: Icon(
             Icons.person_outline,
-            color: Colors.white,
+            color: Color.fromARGB(255, 255, 255, 255),
             size: 14,
           ),
         ),
       ),
     ),
-    actions: const [
-      Icon(Icons.bookmark_outline, color: Colors.white),
-      SizedBox(width: 20),
-      Icon(Icons.notifications_none, color: Color(0xFFF97000)),
-      SizedBox(width: 16),
+    actions: [
+      const Icon(Icons.bookmark_outline, color: Colors.white),
+      const SizedBox(width: 20),
+      GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => NotificationPage()),
+          );
+        },
+        child: const Icon(Icons.notifications_none, color: Color(0xFFF97000)),
+      ),
+      const SizedBox(width: 16),
     ],
   );
 }

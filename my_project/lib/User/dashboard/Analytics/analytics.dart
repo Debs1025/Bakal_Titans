@@ -10,6 +10,7 @@ import '../Search/search.dart';
 import '../homescreen.dart';
 import '../Profile/profile.dart';
 import '../../Sidebar/Sidebar.dart';
+import '../Extras/Notification.dart';
 
 class AnalyticsPage extends StatefulWidget {
   @override
@@ -106,7 +107,19 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                         ),
                         Stack(
                           children: [
-                            const Icon(Icons.notifications_none, color: Colors.white, size: 30),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => NotificationPage()),
+                                );
+                              },
+                              child: const Icon(
+                                Icons.notifications_none, 
+                                color: Colors.white, 
+                                size: 30
+                              ),
+                            ),
                             Positioned(
                               right: 0,
                               top: 0,
@@ -114,17 +127,22 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
                                 height: 14,
                                 width: 14,
                                 decoration: const BoxDecoration(
-                                  color: Colors.orange,
+                                  color: Color(0xFFF97000),  // Using your theme's orange color
                                   shape: BoxShape.circle,
                                 ),
                                 child: const Center(
-                                  child: Text('3', 
-                                      style: TextStyle(color: Colors.white, fontSize: 10)),
+                                  child: Text(
+                                    '3', 
+                                    style: TextStyle(
+                                      color: Colors.white, 
+                                      fontSize: 10
+                                    )
+                                  ),
                                 ),
                               ),
                             ),
                           ],
-                        ),
+                        )
                       ],
                     ),
                   ),
