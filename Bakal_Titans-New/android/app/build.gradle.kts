@@ -45,8 +45,11 @@ flutter {
 }
 
 buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
     dependencies {
-        classpath 'com.google.gms:google-services:4.4.2'
-        implementation(platform("com.google.firebase:firebase-bom:32.7.4"))
+        classpath("com.google.gms:google-services:4.4.2") 
     }
 }

@@ -6,6 +6,7 @@ Description: A screen where users can choose what type of body they have */
 
 
 import 'package:flutter/material.dart';
+import '../../Firebase/userService.dart';
 import 'WeightGoal.dart';
 
 class BodyTypeScreen extends StatefulWidget {
@@ -17,6 +18,7 @@ class BodyTypeScreen extends StatefulWidget {
 
 class _BodyTypeScreenState extends State<BodyTypeScreen> {
   String? selectedBodyType;
+  final UserService _userService = UserService();
 
   final List<Map<String, String>> bodyTypes = [
   {
@@ -32,6 +34,24 @@ class _BodyTypeScreenState extends State<BodyTypeScreen> {
     'icon': 'assets/Profile/mesomorph.png',  
   },
 ];
+
+Future<void> _handleContinue() async {
+  if (selectedBodyType != null) {
+    try {
+      await _userService.updateBodyType(selectedBodyType!); // Remove the parameter name 'bodyType:'
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const WeightGoalScreen(),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error updating body type: $e')),
+      );
+    }
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -210,16 +230,9 @@ class _BodyTypeScreenState extends State<BodyTypeScreen> {
 
 Widget _buildContinueButton() {
   return ElevatedButton(
-    onPressed: selectedBodyType != null ? () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const WeightGoalScreen(),
-        ),
-      );
-    } : null,
+    onPressed: selectedBodyType != null ? _handleContinue : null, 
     style: ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xFFFF8000),
+      backgroundColor: selectedBodyType != null ? const Color(0xFFFF8000) : Colors.grey[800],
       foregroundColor: Colors.white,
       minimumSize: const Size(double.infinity, 50),
       shape: RoundedRectangleBorder(

@@ -4,8 +4,7 @@ Project: Bakal Titans
 Feature: [BKT-0014] Slash Screen
 Description: This is where the main splash screen is coded where the logo in its app name is shown*/
 
-
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; 
 import 'package:firebase_core/firebase_core.dart';
 import 'splash/pelonio.dart';
 import 'Firebase/firebase_option.dart';

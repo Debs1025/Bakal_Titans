@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'BMI.dart';
+import '../../Firebase/userService.dart';
 
 class WeightGoalScreen extends StatefulWidget {
   const WeightGoalScreen({super.key});
@@ -12,6 +13,7 @@ class WeightGoalScreen extends StatefulWidget {
 class _WeightGoalScreenState extends State<WeightGoalScreen> {
   final TextEditingController weightController = TextEditingController();
   bool isWeightValid = false;
+  final UserService _userService = UserService();
 
   @override
   void initState() {
@@ -32,6 +34,26 @@ class _WeightGoalScreenState extends State<WeightGoalScreen> {
     weightController.dispose();
     super.dispose();
   }
+
+ Future<void> _handleContinue() async {
+  if (isWeightValid) {
+    try {
+      await _userService.updateWeightGoal('${weightController.text} lbs');
+      
+      if (!mounted) return;
+
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const BMIScreen()),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error updating weight goal: $e')),
+      );
+    }
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -229,25 +251,18 @@ class _WeightGoalScreenState extends State<WeightGoalScreen> {
     );
   }
 
-  Widget _buildContinueButton() {
-    return ElevatedButton(
-      onPressed: isWeightValid ? () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const BMIScreen(),
-          ),
-        );
-      } : null,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: isWeightValid ? const Color(0xFFFF8000) : Colors.grey[800],
-        foregroundColor: Colors.white,
-        minimumSize: const Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),
-        elevation: 0,
+Widget _buildContinueButton() {
+  return ElevatedButton(
+    onPressed: isWeightValid ? _handleContinue : null,
+    style: ElevatedButton.styleFrom(
+      backgroundColor: isWeightValid ? const Color(0xFFFF8000) : Colors.grey[800],
+      foregroundColor: Colors.white,
+      minimumSize: const Size(double.infinity, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(25),
       ),
+      elevation: 0,
+    ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [

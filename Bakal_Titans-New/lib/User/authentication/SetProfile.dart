@@ -8,6 +8,7 @@ Description: A screen where user fill up their birthdate, gender, weight and hei
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'ActivityLevel.dart';
+import '../../Firebase/userService.dart';
 
 class SetProfileScreen extends StatefulWidget {
   const SetProfileScreen({super.key});
@@ -20,6 +21,7 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
   // Controllers
   final TextEditingController weightController = TextEditingController();
   final TextEditingController heightController = TextEditingController();
+  final UserService _userService = UserService();
 
   // State variables
   String? selectedBirthdate;
@@ -33,6 +35,34 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
   final List<String> genders = ['Male', 'Female', 'Other'];
+  
+
+void _handleContinue() async {
+  if (_isFormComplete()) {
+    try {
+      await _userService.saveUserProfile(
+        birthdate: selectedBirthdate!,
+        gender: selectedGender!,
+        weight: selectedWeight!,
+        height: selectedHeight!,
+      );
+
+      if (!mounted) return;
+      
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const ActivityLevelScreen(),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error saving profile: $e')),
+      );
+    }
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -247,26 +277,19 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
     );
   }
 
-  Widget _buildContinueButton() {
-    return ElevatedButton(
-      onPressed: _isFormComplete() ? () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => const ActivityLevelScreen(),
-          ),
-        );
-      } : null,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFFFF8000),
-        foregroundColor: Colors.white,
-        minimumSize: const Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),
-        elevation: 0,
+Widget _buildContinueButton() {
+  return ElevatedButton(
+    onPressed: _isFormComplete() ? _handleContinue : null,
+    style: ElevatedButton.styleFrom(
+      backgroundColor: _isFormComplete() ? const Color(0xFFFF8000) : Colors.grey[800],
+      foregroundColor: Colors.white,
+      minimumSize: const Size(double.infinity, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(25),
       ),
-      child: Row(
+      elevation: 0,
+    ),
+    child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(

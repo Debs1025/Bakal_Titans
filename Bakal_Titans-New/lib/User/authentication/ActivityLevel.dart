@@ -6,6 +6,7 @@ Description: A screen where user choose what type of activity level they have */
 
 import 'package:flutter/material.dart';
 import 'BodyType.dart';
+import '../../Firebase/userService.dart';
 
 class ActivityLevelScreen extends StatefulWidget {
   const ActivityLevelScreen({super.key});
@@ -16,6 +17,7 @@ class ActivityLevelScreen extends StatefulWidget {
 
 class _ActivityLevelScreenState extends State<ActivityLevelScreen> {
   int selectedActivity = 0;
+  final UserService _userService = UserService();
   
   final List<String> activityLevels = [
     'No Activity',
@@ -23,6 +25,24 @@ class _ActivityLevelScreenState extends State<ActivityLevelScreen> {
     'Moderately Active',
     'Very Active'
   ];
+
+Future<void> _handleContinue() async {
+  try {
+    await _userService.updateActivityLevel(activityLevels[selectedActivity]);
+    
+    if (!mounted) return;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const BodyTypeScreen()),
+    );
+  } catch (e) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error updating activity level: $e')),
+    );
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -230,26 +250,19 @@ Widget _buildProgressDots() {
     );
   }
 
-  Widget _buildContinueButton() {
+Widget _buildContinueButton() {
   return ElevatedButton(
-    onPressed: () {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const BodyTypeScreen(),
-        ),
-      );
-    },
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color(0xFFFF8000),
-        foregroundColor: Colors.white,
-        minimumSize: const Size(double.infinity, 50),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(25),
-        ),
-        elevation: 0,
+    onPressed: _handleContinue,
+    style: ElevatedButton.styleFrom(
+      backgroundColor: const Color(0xFFFF8000),
+      foregroundColor: Colors.white,
+      minimumSize: const Size(double.infinity, 50),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(25),
       ),
-      child: Row(
+      elevation: 0,
+    ),
+    child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Text(

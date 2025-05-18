@@ -1,12 +1,6 @@
-/* Authored by: Erick De Belen
-Company: Gerard Fitness Inc.
-Project: Bakal Titans
-Feature: [BKT-0017] BMI Screen
-Description: A screen where it shows the user's bmi base on their details in the previous sign up screens */
-
-
 import 'package:flutter/material.dart';
 import 'signupComplete.dart';
+import '../../Firebase/userService.dart';
 
 class BMIScreen extends StatefulWidget {
   const BMIScreen({super.key});
@@ -16,8 +10,76 @@ class BMIScreen extends StatefulWidget {
 }
 
 class _BMIScreenState extends State<BMIScreen> {
-  double bmi = 25.9; //Hardcoded BMI for demo
-  String bmiCategory = 'Overweight'; //Hardcoded BMI category for demo
+  final UserService _userService = UserService();
+  double bmi = 0;
+  String bmiCategory = '';
+  bool isLoading = true;
+  String? errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _calculateAndSaveBMI();
+  }
+
+ Future<void> _calculateAndSaveBMI() async {
+  try {
+    setState(() => isLoading = true);
+    
+    // Add timeout to Firebase call
+    final userProfile = await _userService.getUserProfile().timeout(
+      const Duration(seconds: 5),
+      onTimeout: () => throw 'Connection timeout. Please try again.',
+    );
+    
+    if (userProfile == null) {
+      throw 'No profile data found';
+    }
+
+    // Do calculation before Firebase update
+    final weightStr = userProfile['weight']?.toString().replaceAll(' kg', '') ?? '0';
+    final heightStr = userProfile['height']?.toString().replaceAll(' cm', '') ?? '0';
+    
+    final weight = double.parse(weightStr);
+    final height = double.parse(heightStr);
+    
+    if (weight <= 0 || height <= 0) {
+      throw 'Invalid weight or height values';
+    }
+
+    bmi = weight / ((height / 100) * (height / 100));
+    bmi = double.parse(bmi.toStringAsFixed(1));
+    bmiCategory = _getBMICategory(bmi);
+
+    // Update UI first
+    setState(() {
+      errorMessage = null;
+      isLoading = false;
+    });
+
+    // Then update Firebase in background
+    _userService.updateBMI(
+      bmi: bmi,
+      bmiCategory: bmiCategory,
+    );
+
+  } catch (e) {
+    setState(() {
+      errorMessage = e.toString();
+      isLoading = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error: $e')),
+    );
+  }
+}
+
+  String _getBMICategory(double bmi) {
+    if (bmi < 18.5) return 'Underweight';
+    if (bmi < 25) return 'Normal';
+    if (bmi < 30) return 'Overweight';
+    return 'Obese';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,26 +90,35 @@ class _BMIScreenState extends State<BMIScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildHeader(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    'Your BMI',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+            if (isLoading)
+              const Center(
+                child: CircularProgressIndicator(
+                  color: Color(0xFFFF8000),
+                ),
+              )
+            else ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Your BMI',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 32),
-                  _buildBMIDisplay(),
-                ],
+                    const SizedBox(height: 32),
+                    _buildBMIDisplay(),
+                  ],
+                ),
               ),
-            ),
-            const Spacer(),
-            _buildBottomSection(),
+              _buildStepIndicator(),
+              const Spacer(),
+              _buildBottomSection(),
+            ],
           ],
         ),
       ),
@@ -145,76 +216,74 @@ class _BMIScreenState extends State<BMIScreen> {
   }
 
   Widget _buildBottomSection() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildStepIndicator(),
-          const SizedBox(height: 16),
-          _buildContinueButton(),
-        ],
+    return Container(
+      padding: const EdgeInsets.all(24),
+      child: ElevatedButton(
+        onPressed: isLoading || errorMessage != null 
+          ? null 
+          : () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PassCompleteScreen(),
+                ),
+                (route) => false,
+              );
+            },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isLoading || errorMessage != null 
+            ? Colors.grey[800] 
+            : const Color(0xFFFF8000),
+          foregroundColor: Colors.white,
+          minimumSize: const Size(double.infinity, 50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+          elevation: 0,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              isLoading ? 'Calculating...' : 'Continue',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            if (!isLoading) ...[
+              const SizedBox(width: 8),
+              Image.asset(
+                'assets/Profile/arrow.png',
+                width: 16,
+                height: 16,
+                color: Colors.white,
+              ),
+            ],
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildStepIndicator() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List.generate(
-        5,
-        (index) => Container(
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          width: 24,
-          height: 4,
-          decoration: BoxDecoration(
-            color: index == 4 ? const Color(0xFFFF8000) : Colors.grey[800],
-            borderRadius: BorderRadius.circular(2),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 24),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List.generate(
+          5,
+          (index) => Container(
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            width: 24,
+            height: 4,
+            decoration: BoxDecoration(
+              color: index == 4 ? const Color(0xFFFF8000) : Colors.grey[800],
+              borderRadius: BorderRadius.circular(2),
+            ),
           ),
         ),
       ),
     );
   }
-
-  Widget _buildContinueButton() {
-  return ElevatedButton(
-    onPressed: () {
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const PassCompleteScreen(),
-        ),
-        (route) => false,
-      );
-    },
-    style: ElevatedButton.styleFrom(
-      backgroundColor: const Color(0xFFFF8000),
-      foregroundColor: Colors.white,
-      minimumSize: const Size(double.infinity, 50),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(25),
-      ),
-      elevation: 0,
-    ),
-    child: Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          'Continue',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(width: 8),
-        Image.asset(
-          'assets/Profile/arrow.png',
-          width: 16,
-          height: 16,
-          color: Colors.white,
-        ),
-      ],
-    ),
-  );
- }
 }
