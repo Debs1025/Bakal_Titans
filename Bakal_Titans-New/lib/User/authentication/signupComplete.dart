@@ -30,32 +30,37 @@ class _PassCompleteScreenState extends State<PassCompleteScreen> {
     });
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // Check icon
-              Image.asset(
-                'assets/Password/complete.png',
-                width: 80,
-                height: 80,
-                color: Colors.green,
-              ),
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.black,
+    body: Center( 
+      child: Container(
+        width: double.infinity, 
+        padding: const EdgeInsets.symmetric(horizontal: 24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center, 
+          children: [
+            // Check icon
+            Image.asset(
+              'assets/Password/complete.png',
+              width: 100,
+              height: 100,
+              color: Colors.green,
+            ),
               
-              const SizedBox(height: 24),
+              const SizedBox(height: 32),
               
               // Success text
               const Text(
                 'Sign Up Complete',
+                textAlign: TextAlign.center, 
                 style: TextStyle(
                   color: Colors.white,
-                  fontSize: 20,
+                  fontSize: 24, 
                   fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5, 
                 ),
               ),
             ],

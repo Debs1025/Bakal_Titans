@@ -28,11 +28,11 @@ class _ActivityLevelScreenState extends State<ActivityLevelScreen> {
 
 Future<void> _handleContinue() async {
   try {
-    await _userService.updateActivityLevel(activityLevels[selectedActivity]);
+    // Store in UserService temporary storage
+    _userService.tempActivityLevel = activityLevels[selectedActivity];
     
     if (!mounted) return;
-
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(builder: (context) => const BodyTypeScreen()),
     );

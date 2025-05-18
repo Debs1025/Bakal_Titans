@@ -40,23 +40,22 @@ class _SetProfileScreenState extends State<SetProfileScreen> {
 void _handleContinue() async {
   if (_isFormComplete()) {
     try {
-      await _userService.saveUserProfile(
-        birthdate: selectedBirthdate!,
-        gender: selectedGender!,
-        weight: selectedWeight!,
-        height: selectedHeight!,
-      );
+      final cleanWeight = selectedWeight!.replaceAll(' kg', '');
+      final cleanHeight = selectedHeight!.replaceAll(' cm', '');
+      
+      // Store in UserService temporary storage
+      _userService.tempBirthdate = selectedBirthdate;
+      _userService.tempGender = selectedGender;
+      _userService.tempWeight = cleanWeight;
+      _userService.tempHeight = cleanHeight;
 
       if (!mounted) return;
-      
-      Navigator.push(
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => const ActivityLevelScreen(),
-        ),
+        MaterialPageRoute(builder: (context) => const ActivityLevelScreen()),
       );
     } catch (e) {
-      if (!mounted) return;
+      print('Error saving profile: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error saving profile: $e')),
       );

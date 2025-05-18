@@ -1,15 +1,8 @@
-/* Authored by: Erick De Belen
-Company: Gerard Fitness Inc.
-Project: Bakal Titans
-Feature: [BKT-002] Login
-Description: This is where the log in screen is located where it 
-contains the email, password, or log in as chrome / facebook*/
-
-
 import 'package:flutter/material.dart';
-import 'SetProfile.dart';
 import '../dashboard/homescreen.dart';
-import 'password/forgotpass.dart'; 
+import 'password/forgotpass.dart';
+import 'signup.dart';
+import '../../Firebase/userService.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -21,6 +14,50 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   bool _obscurePassword = true;
   bool _rememberMe = false;
+  bool _isLoading = false;
+  final UserService _userService = UserService();
+  
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+
+  Future<void> _handleLogin() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+      return;
+    }
+
+    setState(() => _isLoading = true);
+
+    try {
+      await _userService.loginUser(
+        email: _emailController.text,
+        password: _passwordController.text,
+      );
+      
+      if (!mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error logging in: $e')),
+      );
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,6 +100,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
                         child: TextField(
+                          controller: _emailController,
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
                             hintText: 'Email',
@@ -82,6 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 8.0),
                         child: TextField(
+                          controller: _passwordController,
                           obscureText: _obscurePassword,
                           style: const TextStyle(color: Colors.white),
                           decoration: InputDecoration(
@@ -97,11 +136,11 @@ class _LoginScreenState extends State<LoginScreen> {
                             suffixIcon: GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  _obscurePassword = !_obscurePassword; 
+                                  _obscurePassword = !_obscurePassword;
                                 });
                               },
                               child: Padding(
-                                padding: const EdgeInsets.all(12), 
+                                padding: const EdgeInsets.all(12),
                                 child: Image.asset(
                                   'assets/hidepassword.png',
                                   width: 24,
@@ -116,7 +155,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                       const SizedBox(height: 16),
 
-                      // Remember Me and Forgot Password 
+                      // Remember Me and Forgot Password
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 32.0),
                         child: Row(
@@ -162,7 +201,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               ],
                             ),
                             // Forgot Password
-                             GestureDetector(
+                            GestureDetector(
                               onTap: () {
                                 Navigator.push(
                                   context,
@@ -189,14 +228,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 32.0),
                         child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const HomeScreen(),
-                              ),
-                            );
-                          },
+                          onPressed: _isLoading ? null : _handleLogin,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFFF8000),
                             foregroundColor: Colors.white,
@@ -206,13 +238,22 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             elevation: 0,
                           ),
-                          child: const Text(
-                            'Login',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
+                          child: _isLoading
+                              ? const SizedBox(
+                                  width: 20,
+                                  height: 20,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                    strokeWidth: 2,
+                                  ),
+                                )
+                              : const Text(
+                                  'Login',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                         ),
                       ),
 
@@ -284,12 +325,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontSize: 14,
                             ),
                           ),
-                         GestureDetector(
+                          GestureDetector(
                             onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const SetProfileScreen(), 
+                                  builder: (context) => const SignUpScreen(), 
                                 ),
                               );
                             },

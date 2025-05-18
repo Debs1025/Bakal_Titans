@@ -35,15 +35,16 @@ class _BodyTypeScreenState extends State<BodyTypeScreen> {
   },
 ];
 
+
 Future<void> _handleContinue() async {
   if (selectedBodyType != null) {
     try {
-      await _userService.updateBodyType(selectedBodyType!); // Remove the parameter name 'bodyType:'
-      Navigator.push(
+      // Store in UserService temporary storage
+      _userService.tempBodyType = selectedBodyType;
+      
+      Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => const WeightGoalScreen(),
-        ),
+        MaterialPageRoute(builder: (context) => const WeightGoalScreen()),
       );
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(

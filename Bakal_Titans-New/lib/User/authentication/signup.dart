@@ -1,13 +1,6 @@
-/* Authored by: Erick De Belen
-Company: Gerard Fitness Inc.
-Project: Bakal Titans
-Feature: [BKT-001] Account Creation
-Description: This is where the sign up screen is coded where the 
-user is required to fill up fullname, email, password and 
-confirm password*/
-
-
 import 'package:flutter/material.dart';
+import '../../Firebase/userService.dart';
+import 'SetProfile.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -19,12 +12,69 @@ class SignUpScreen extends StatefulWidget {
 class _SignUpScreenState extends State<SignUpScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
+  bool _isLoading = false;
+  final UserService _userService = UserService();
   
   // Controllers for text fields
-  final TextEditingController _nameController = TextEditingController(); 
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
+
+Future<void> _handleSignUp() async {
+  if (_nameController.text.isEmpty ||
+      _emailController.text.isEmpty ||
+      _passwordController.text.isEmpty ||
+      _confirmPasswordController.text.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please fill in all fields')),
+    );
+    return;
+  }
+
+  if (_passwordController.text.length < 8) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Password must be at least 8 characters')),
+    );
+    return;
+  }
+
+  if (_passwordController.text != _confirmPasswordController.text) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Passwords do not match')),
+    );
+    return;
+  }
+
+  setState(() => _isLoading = true);
+
+  try {
+    // Store credentials temporarily
+    _userService.tempEmail = _emailController.text.trim();
+    _userService.tempPassword = _passwordController.text;
+    _userService.tempUsername = _nameController.text.trim();
+
+    print('Signup - Storing credentials:');
+    print('Email: ${_userService.tempEmail}');
+    print('Username: ${_userService.tempUsername}');
+    
+    if (!mounted) return;
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const SetProfileScreen()),
+    );
+  } catch (e) {
+    print('Error in signup: $e');
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Error: $e')),
+    );
+  } finally {
+    if (mounted) setState(() => _isLoading = false);
+  }
+}
+
 
   @override
   void dispose() {
@@ -50,9 +100,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 Padding(
                   padding: const EdgeInsets.only(left: 15.0, top: 40.0),
                   child: GestureDetector(
-                    onTap: () {
-                      Navigator.pop(context);
-                    },
+                    onTap: () => Navigator.pop(context),
                     child: const Icon(
                       Icons.arrow_back_ios,
                       color: Color(0xFFFF8000),
@@ -73,9 +121,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                         height: 70,
                         color: const Color(0xFFFF8000),
                       ),
-                      
                       const SizedBox(height: 24),
-                      
                       const Text(
                         'CREATE AN ACCOUNT',
                         style: TextStyle(
@@ -85,9 +131,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                           letterSpacing: 1.0,
                         ),
                       ),
-                      
                       const SizedBox(height: 8),
-                      
                       Text(
                         'Please enter your details.',
                         style: TextStyle(
@@ -158,11 +202,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     contentPadding: const EdgeInsets.symmetric(vertical: 12),
                     suffixIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _obscurePassword = !_obscurePassword;
-                        });
-                      },
+                      onTap: () => setState(() => _obscurePassword = !_obscurePassword),
                       child: Padding(
                         padding: const EdgeInsets.all(12),
                         child: Image.asset(
@@ -194,11 +234,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     contentPadding: const EdgeInsets.symmetric(vertical: 12),
                     suffixIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _obscureConfirmPassword = !_obscureConfirmPassword;
-                        });
-                      },
+                      onTap: () => setState(() => _obscureConfirmPassword = !_obscureConfirmPassword),
                       child: Padding(
                         padding: const EdgeInsets.all(12),
                         child: Image.asset(
@@ -216,7 +252,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 
                 // Sign-Up button
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _isLoading ? null : _handleSignUp,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFFF8000),
                     foregroundColor: Colors.white,
@@ -226,20 +262,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
                     ),
                     elevation: 0,
                   ),
-                  child: const Text(
-                    'Sign Up',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  child: _isLoading
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
+                        )
+                      : const Text(
+                          'Next',
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                 ),
                 
                 const SizedBox(height: 16),
                 
                 // Google Sign in button
                 OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // TODO: Implement Google sign in
+                  },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Color(0xFFFF8000)),
                     foregroundColor: Colors.white,
@@ -259,9 +306,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(width: 10),
                       const Text(
                         'Sign up with Google',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(fontSize: 14),
                       ),
                     ],
                   ),
@@ -271,7 +316,9 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 
                 // Facebook Sign in button
                 OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    // TODO: Implement Facebook sign in
+                  },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: Color(0xFFFF8000)),
                     foregroundColor: Colors.white,
@@ -291,9 +338,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       const SizedBox(width: 10),
                       const Text(
                         'Sign up with Facebook',
-                        style: TextStyle(
-                          fontSize: 14,
-                        ),
+                        style: TextStyle(fontSize: 14),
                       ),
                     ],
                   ),
@@ -307,4 +352,4 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
     );
   }
-}
+ }
