@@ -6,32 +6,18 @@ Description: This is where the main splash screen is coded where the logo in its
 
 
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_core/firebase_core.dart';
 import 'splash/pelonio.dart';
+import 'Firebase/firebase_option.dart';
 
 // Entry point of the application
 // Runs the root widget MyApp
 void main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
-
-    if (kIsWeb) {
-      await Firebase.initializeApp(
-        options: const FirebaseOptions(
-          apiKey: "AIzaSyCfZOM_t9wB6ltsobk_tnOLRBSgochqaj4",
-          authDomain: "bakal-titans.firebaseapp.com",
-          projectId: "bakal-titans",
-          storageBucket: "bakal-titans.firebasestorage.app",
-          messagingSenderId: "420969451163",
-          appId: "1:420969451163:web:d66f3a5ba73122f734003e",
-          measurementId: "G-J9CFVN4DHG"
-        ),
-      );
-    } else {
-      await Firebase.initializeApp();
-    }
-    
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
     print('Firebase initialized successfully');
     runApp(const MyApp());
   } catch (e) {

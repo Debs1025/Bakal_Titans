@@ -6,7 +6,6 @@ import '../History/history.dart';
 import 'editprofile.dart';
 import './profile_state.dart'; 
 import 'dart:io';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -111,59 +110,50 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-Widget _buildProfileHeader() {
-  return Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: Colors.grey[900],
-      borderRadius: BorderRadius.circular(16),
-    ),
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircleAvatar(
-              radius: 40,
-              backgroundColor: Colors.grey[800],
-              child: ClipOval(
-                child: kIsWeb 
-                  ? (ProfileState.profileImagePath.startsWith('http')
-                      ? Image.network(
-                          ProfileState.profileImagePath,
-                          fit: BoxFit.cover,
-                          width: 80,
-                          height: 80,
-                          loadingBuilder: (context, child, loadingProgress) {
-                            if (loadingProgress == null) return child;
-                            return _buildImagePlaceholder(size: 80);
-                          },
-                          errorBuilder: (context, error, stackTrace) {
-                            return _buildImagePlaceholder(size: 80);
-                          },
-                        )
-                      : Image.asset(
-                          'assets/default_profile.png',
-                          fit: BoxFit.cover,
-                          width: 80,
-                          height: 80,
-                          errorBuilder: (context, error, stackTrace) {
-                            return _buildImagePlaceholder(size: 80);
-                          },
-                        ))
-                  : Image.file(
-                      File(ProfileState.profileImagePath),
-                      fit: BoxFit.cover,
-                      width: 80,
-                      height: 80,
-                      errorBuilder: (context, error, stackTrace) {
-                        return _buildImagePlaceholder(size: 80);
-                      },
-                    ),
+  Widget _buildProfileHeader() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.grey[900],
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircleAvatar(
+                radius: 40,
+                backgroundColor: Colors.grey[800],
+                child: ClipOval(
+                  child: ProfileState.profileImagePath.startsWith('http') 
+                    ? Image.network(
+                        ProfileState.profileImagePath,
+                        fit: BoxFit.cover,
+                        width: 80,
+                        height: 80,
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) return child;
+                          return _buildImagePlaceholder(size: 80);
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return _buildImagePlaceholder(size: 80);
+                        },
+                      )
+                    : Image.file(
+                        File(ProfileState.profileImagePath),
+                        fit: BoxFit.cover,
+                        width: 80,
+                        height: 80,
+                        errorBuilder: (context, error, stackTrace) {
+                          print('Error loading image: $error');
+                          return _buildImagePlaceholder(size: 80);
+                        },
+                      ),
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
           const SizedBox(height: 8),
           Text(
             ProfileState.name,
