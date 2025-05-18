@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "420969451163",
+    "project_id": "bakal-titans",
+    "storage_bucket": "bakal-titans.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:420969451163:android:78f0583677dc0b9334003e",
+        "android_client_info": {
+          "package_name": "com.example.my_project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBAAa0kPv270jKdK1DsOcweeySwa12npLk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
